@@ -1,6 +1,6 @@
 # udacity-disaster-response-pipeline
 
-T.Bender for udacity
+Tim Bender for udacity
 
 
 ## About The Project
