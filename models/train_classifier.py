@@ -58,9 +58,6 @@ def load_data(database_filepath):
     #Remove child alone as it has all zeros only
     df = df.drop(['child_alone'],axis=1)
     
-    # fix value 2 in related field:
-    df['related']=df['related'].map(lambda x: 1 if x == 2 else x)
-    
     X = df['message']
     y = df.iloc[:,4:]
     
@@ -121,7 +118,17 @@ def build_model():
         ('tfidf', TfidfTransformer()),
         ('clf', MultiOutputClassifier(AdaBoostClassifier()))
     ])
-    return pipeline
+    
+        # specify parameters for grid search - only limited paramter, as the training takes to much time,
+    # more testing was done in the jupyter notebooks
+    param_grid = {
+        'n_estimators': [100, 200, 300],
+        'max_depth': [None, 5, 10],
+        'min_samples_split': [2, 5, 10]
+    }
+
+    cv = GridSearchCV(estimator=pipeline, param_grid=param_grid,cv=5)
+    return cv
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
